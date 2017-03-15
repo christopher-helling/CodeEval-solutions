@@ -15,15 +15,9 @@ namespace CodeEval
                     if (String.IsNullOrEmpty(line))
                         continue;
                     // do something with line
-
-                    int val = Int32.Parse(line); // convert to int 
-
-                    // print result 
-                    Console.WriteLine(Convert.ToString(val, 2)); // convert decimal value to base 2
+                    Console.WriteLine(Convert.ToString(Int32.Parse(line), 2)); // convert decimal value to base 2
                 }
-
             }
-
         }
     }
 }
