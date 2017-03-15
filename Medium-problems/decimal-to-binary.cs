@@ -16,12 +16,10 @@ namespace CodeEval
                         continue;
                     // do something with line
 
-                    string[] input = line.Split(new char[] { ',' }, StringSplitOptions.None); // split on comma
-
-                    int decimalValue = Int32.Parse(input[0]); // convert to int 
+                    int val = Int32.Parse(line); // convert to int 
 
                     // print result 
-                    Console.WriteLine(Convert.ToString(decimalValue, 2)); // convert decimal value to base 2
+                    Console.WriteLine(Convert.ToString(val, 2)); // convert decimal value to base 2
                 }
 
             }
