@@ -16,7 +16,6 @@ namespace CodeEval
                         continue;
                     // do something with line
 
-                    // maximum subarray problem
                     string[] input = line.Split(new char[] { ',' }, StringSplitOptions.None); // split on comma
 
                     int decimalValue = Int32.Parse(input[0]); // convert to int 
