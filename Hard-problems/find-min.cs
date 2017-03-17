@@ -38,6 +38,12 @@ namespace CodeEval
                     int n = (int)input[0];
                     int k = (int)input[1];
                     int stoppingIndex = (n + 1) % (k + 1); // don't need to find m[n-1] since the added elements are cyclical, we can thus stop at the appropriate index
+
+                    if (stoppingIndex == 0)
+                    {
+                        stoppingIndex = k; // if stoppingIndex is "0" in above calculation, we need to calculate m values from m[k] up to m[2k], not m[k] to m[k+0]
+                    }
+
                     int[] m = new int[k + stoppingIndex]; // don't need array of size m[n], since we will stop before calculating the extra values anyway
                     
                     // we will keep track of missing values with an array of -1's. If index i has a value != -1, it does not appear in the array m
@@ -63,37 +69,39 @@ namespace CodeEval
                         }
                     }
 
-                        // here we will populate k to 2k, but stop sooner when possible
-                        for (int i = 0; i < stoppingIndex; i++)
+                    // here we will populate k to 2k, but stop sooner when possible
+                    for (int i = 0; i < stoppingIndex; i++)
+                    {
+                        // find minimum of missingValues by finding the first entry != -1
+                        m[i + k] = findMinMissingValue(missingValues);
+                        missingValues[m[i + k]] = -1; // mark this number used, i.e. no longer missing
+
+                        bool willBecomeMissingValue = true;
+                        if (m[i] <= k) // the numbers m[k] to m[2k] are a cyclic permutation of (k+1) = {0, 1, 2, ..., k}, no need to check numbers bigger than k
                         {
-                            // find minimum of missingValues by finding the first entry != -1
-                            m[i + k] = findMinMissingValue(missingValues);
-                            missingValues[m[i + k]] = -1; // mark this number used, i.e. no longer missing
-
-                            bool willBecomeMissingValue = true;
-                            if (m[i] <= k) // the numbers m[k] to m[2k] are a cyclic permutation of (k+1) = {0, 1, 2, ..., k}, no need to check numbers bigger than k
+                            // we are determining the value of m[i+k]. m[i] is just about to be out of range of "the previous k numbers", so we check if it will become a missing value
+                            for (int j = i + 1; j < n && j <= i + k; j++) // check range m[i+1] to m[i+k+1], don't check past m[n-1]
                             {
-                                // we are determining the value of m[i+k]. m[i] is just about to be out of range of "the previous k numbers", so we check if it will become a missing value
-                                for (int j = i + 1; j < n && j <= i + k; j++) // check range m[i+1] to m[i+k+1], don't check past m[n-1]
+                                if (m[j] == m[i])
                                 {
-                                    if (m[j] == m[i])
-                                    {
-                                        willBecomeMissingValue = false;
-                                        break;
-                                    }
+                                    willBecomeMissingValue = false;
+                                    break;
                                 }
-
-                            }
-                            else 
-                            {
-                                willBecomeMissingValue = false; // this number is too big to be missing, e.g. > k
                             }
 
-                            if (willBecomeMissingValue)
-                            {
-                                missingValues[m[i]] = m[i];
-                            }
                         }
+                        else
+                        {
+                            willBecomeMissingValue = false; // this number is too big to be missing, e.g. > k
+                        }
+
+                        if (willBecomeMissingValue)
+                        {
+                            missingValues[m[i]] = m[i];
+                        }
+                    }
+
+                        
                     Console.WriteLine(m[m.Length-1]); // m[n-1]
                 }
             Console.Read();
